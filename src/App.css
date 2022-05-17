@@ -1,38 +1,195 @@
-.App {
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: rgb(0, 9, 14);
+}
+
+
+/* Heading */
+
+.mainHeading {
   text-align: center;
+  margin-top: 2rem;
+  color: rgb(224, 8, 8);
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.subHeading {
+  text-align: center;
+  color: rgb(12, 94, 114);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* Todo Input */
+
+.todoInput {
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+  height: 3.5rem;
+  /* background-color: rgb(10, 101, 221); */
+  /* box-shadow: 0 0 2px 1px rgb(255, 255, 255); */
+  /* margin: auto; */
+  margin-top: 1rem;
+  border-radius: .25rem;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+
+.inputField input {
+  width: 98%;
+  height: 80%;
+  border: unset;
+  border-radius: .25rem;
+  outline: none;
+  font-size: x-large;
+  font-family: inherit;
+  font-weight: bold;
+  margin: 2%;
+
+}
+
+.buttons {
+  width: 4%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+i {
+  cursor: pointer;
+}
+
+.erase-button {
+  color: brown;
+  font-size: x-large;
+}
+
+.add-button {
+  color: brown;
+  font-size: x-large;
+}
+
+/* Containers */
+/* 
+.allContainers{
+  display: flex;
+  justify-content: space-evenly;
+} */
+
+/* Container */
+
+.container {
+  /* position: absolute;
+  left: 50%;
+  transform: translate(-64%); */
+
+  background-color: seagreen;
+  /* width: 27%; */
+  margin-top: 2.5%;
+  margin-left: 2.5%;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  border-radius: .25rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+
+  float: left;
+  /* To make all containers in a line */
+  width: calc((100% - 130px)/3);
 }
 
-.App-link {
-  color: #61dafb;
+.container h3 {
+  /* color: rgb(153, 0, 255); */
+  text-align: center;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Container DoneList */
+
+.container .toDoList {
+  width: 90%;
+  height: 100%;
+  background-color: rgb(241, 241, 241, 0.2);
+  margin-top: .5rem;
+  padding: 5px;
+  border-radius: .25rem;
+  transition: width 200ms;
+  display: flex;
+  justify-content: space-between;
+  display: flex;
+  align-items: center;
+}
+
+.container .toDoList:hover {
+
+  background-color: rgba(241, 241, 241, 0.313);
+  width: 95%;
+}
+
+.toDoListText {
+  /* word-wrap: break-word;   //better way
+   text-align: justify; */
+
+  /* width: 25.5vw;
+  word-wrap: break-word; */
+
+  word-break: break-all;
+  /* better way */
+  /* cursor: pointer; */
+  color: rgba(1, 31, 39, 0.829);
+  font-size: large;
+  font-weight: 500;
+  /* text-align: justify; */
+}
+
+.textChecked {
+  text-decoration: line-through;
+  text-decoration-color: rgb(255, 0, 0);
+  text-decoration-style: double;
+}
+
+.delete {
+  color: rgba(255, 0, 0, 0.651);
+  /* padding-left: 10px; */
+}
+
+.delete:hover {
+
+  color: rgb(98, 0, 255);
+  transform: scale(1.2);
+}
+
+/* .addtocompletelist{
+  padding-right: 10px;
+} */
+
+.addtocompletelist:hover {
+
+  color: rgb(23, 253, 61);
+  transform: scale(1.2);
+}
+
+.drop {
+  color: orange;
+}
+
+.drop:hover {
+  color: rgb(253, 211, 23);
+  transform: scale(1.3);
+}
+
+.retrieve {
+  color: blue;
+}
+
+.retrieve:hover {
+  color: rgb(20, 101, 167);
+  transform: scale(1.2);
+}
+
+.drop_delete{
+  display: flex;
+  flex-direction: column;
 }

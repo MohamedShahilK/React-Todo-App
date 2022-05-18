@@ -4,18 +4,40 @@ import './App.css';
 
 function App() {
 
+  // Date Starts
+
+  // const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  // const date = new Date();
+  // const day = dayNames[date.getDay()];
+
+  const dayNamesShort = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const currDate = new Date();
+  const hours = currDate.getHours();
+  const AMorPM = hours >= 12 ? 'PM' : 'AM';
+  var hour = hours % 12;
+  const hour12 = () => {
+    if (hour === 0) hour = 12;
+    return hour;
+  };
+  const toDoDate = currDate.getDate() + '.' + (currDate.getMonth() + 1) + '.' + currDate.getFullYear();
+  const toDoDay = dayNamesShort[currDate.getDay()];
+  const toDoTime = hour12() + ':' + currDate.getMinutes() + ':' + currDate.getSeconds() + ' ' + AMorPM;
+  const toDoTimeDateDay = toDoTime + ' ' + toDoDay + ' ' + toDoDate;
+
+  // Date Ends
+
   const [toDo, setToDo] = useState('')
   // const [toDos, setToDos] = useState([])
-  const [toDos, setToDos] = useState(()=>{
+  const [toDos, setToDos] = useState(() => {
 
     const saved = localStorage.getItem("Storage");
     const initialValue = JSON.parse(saved)
     return (initialValue || "")
   })
 
-  useEffect(()=>{
-    localStorage.setItem("Storage",JSON.stringify(toDos))
-  },[toDos])
+  useEffect(() => {
+    localStorage.setItem("Storage", JSON.stringify(toDos))
+  }, [toDos])
 
   const handleUserInput = (e) => {
     setToDo(e.target.value)
@@ -35,6 +57,7 @@ function App() {
         statusDropped: false,
         statusRetrieve: false,
         // statusRemove: false
+        todoTime: toDoTimeDateDay
       }
       ])
       setToDo('')
@@ -76,79 +99,29 @@ function App() {
 
       {/* DoneList Container Start */}
 
-      <div className="container">
-        <h3>Completed List</h3>
 
-        {
+      <div className="containers">
+        <div className="container complete">
+          <h3>Completed List</h3>
 
-          toDos && toDos.map((eachTodo) => {
+          {
 
-            if (eachTodo.statusDone) {
-              return (
-                <div key={eachTodo.id} className="toDoList">
+            toDos && toDos.map((eachTodo) => {
 
-                  <div className="toDoListText">
-                    <p className='textChecked'>{eachTodo.text}</p>
-                  </div>
+              if (eachTodo.statusDone) {
+                return (
+                  <div key={eachTodo.id} className="toDoList">
 
-                  <div className="delete">
-                    <i onClick={() => {
+                    <div className='completed'>
+                      <div className="toDoListText">
+                        <p>{eachTodo.text}</p>
+                      </div>
 
-                      let isdelete = window.confirm('Do you want to remove it?')
-                      if (isdelete) {
+                      <div className="todoTime">
+                        <p>{eachTodo.todoTime}</p>
+                      </div>
+                    </div>
 
-                        setToDos(toDos.filter((elem) => {
-
-                          if (elem.id === eachTodo.id) {
-                            elem = null
-                          }
-                          return elem
-                        }))
-                      }
-
-                    }} class="fa-solid fa-trash" title='Remove'></i>
-
-                  </div>
-
-                </div>
-              )
-            }
-            return null
-          })
-        }
-
-
-      </div>
-
-      <div className="container">
-
-        <h3>Ongoing List</h3>
-        {
-          toDos && toDos.map((eachTodo) => {
-
-            if (!eachTodo.statusDone && !eachTodo.statusDropped) {
-              return (
-                <div key={eachTodo.id} className='toDoList'>
-
-                  <div className="addtocompletelist">
-                    <i onClick={() => {
-
-                      let value = true
-                      setToDos(toDos.filter((elem) => {
-
-                        if (elem.id === eachTodo.id) {
-                          elem.statusDone = value
-                        }
-                        return elem
-                      }))
-                    }} class="fa-solid fa-clipboard-check" title='Done'></i>
-                  </div>
-
-                  <div className="toDoListText">
-                    <p>{eachTodo.text}</p>
-                  </div>
-
-                  <div className="drop_delete">
                     <div className="delete">
                       <i onClick={() => {
 
@@ -165,141 +138,227 @@ function App() {
                         }
 
                       }} class="fa-solid fa-trash" title='Remove'></i>
+
                     </div>
-                    <div className="drop">
+
+                  </div>
+                )
+              }
+              return null
+            })
+          }
+
+
+        </div>
+
+        <div className="container ongoing">
+
+          <h3>Ongoing List</h3>
+          {
+            toDos && toDos.map((eachTodo) => {
+
+              if (!eachTodo.statusDone && !eachTodo.statusDropped && !eachTodo.statusRetrieve) {
+                return (
+                  <div key={eachTodo.id} className='toDoList'>
+
+                    <div className="addtocompletelist">
+                      <i onClick={() => {
+
+                        let value = true
+                        setToDos(toDos.filter((elem) => {
+
+                          if (elem.id === eachTodo.id) {
+                            elem.statusDone = value
+                          }
+                          return elem
+                        }))
+                      }} class="fa-solid fa-clipboard-check" title='Done'></i>
+                    </div>
+
+                    <div className='text_time'>
+                      <div className="toDoListText">
+                        <p>{eachTodo.text}</p>
+                      </div>
+
+                      <div className="todoTime">
+                        <p>{eachTodo.todoTime}</p>
+                      </div>
+                    </div>
+
+                    <div className="drop_delete">
+                      <div className="delete">
+                        <i onClick={() => {
+
+                          let isdelete = window.confirm('Do you want to remove it?')
+                          if (isdelete) {
+
+                            setToDos(toDos.filter((elem) => {
+
+                              if (elem.id === eachTodo.id) {
+                                elem = null
+                              }
+                              return elem
+                            }))
+                          }
+
+                        }} class="fa-solid fa-trash" title='Remove'></i>
+                      </div>
+                      <div className="drop">
+                        <i onClick={(e) => {
+
+                          e.target.value = true
+                          setToDos(toDos.filter((elem) => {
+                            if (elem.id === eachTodo.id) {
+                              elem.statusDropped = e.target.value
+                            }
+                            return elem
+                          }))
+                        }} class="fa-solid fa-xmark" title='Drop'></i>
+                      </div>
+                    </div>
+
+                  </div>
+                )
+              } else if (eachTodo.statusRetrieve) {
+
+                return (
+                  <div key={eachTodo.id} className='toDoList'>
+
+                    <div className="addtocompletelist">
+                      <i onClick={() => {
+
+                        let value = true
+                        setToDos(toDos.filter((elem) => {
+
+                          if (elem.id === eachTodo.id) {
+                            elem.statusDone = value
+                            elem.statusRetrieve = !value
+                          }
+                          return elem
+                        }))
+                      }} class="fa-solid fa-clipboard-check" title='Done'></i>
+                    </div>
+
+                    <div className="toDoListText">
+                      <p>{eachTodo.text}</p>
+                    </div>
+
+                    {/* <div className='text_time'>
+                      <div className="toDoListText">
+                        <p>{eachTodo.text}</p>
+                      </div>
+
+                      <div className="todoTime">
+                        <p>{eachTodo.todoTime}</p>
+                      </div>
+                    </div> */}
+
+                    <div className="drop_delete">
+                      <div className="delete">
+                        <i onClick={() => {
+
+                          let isdelete = window.confirm('Do you want to remove it?')
+                          if (isdelete) {
+
+                            setToDos(toDos.filter((elem) => {
+
+                              if (elem.id === eachTodo.id) {
+                                elem = null
+                              }
+                              return elem
+                            }))
+                          }
+
+                        }} class="fa-solid fa-trash" title='Remove'></i>
+                      </div>
+                      <div className="drop">
+                        <i onClick={(e) => {
+
+                          e.target.value = true
+                          setToDos(toDos.filter((elem) => {
+                            if (elem.id === eachTodo.id) {
+                              elem.statusDropped = e.target.value
+                              elem.statusRetrieve = !e.target.value
+                            }
+                            return elem
+                          }))
+                        }} class="fa-solid fa-xmark" title='Drop'></i>
+                      </div>
+                    </div>
+
+                  </div>
+                )
+              }
+              return null
+            })
+          }
+        </div>
+
+        <div className="container dropped">
+          <h3>Dropped List</h3>
+
+          {
+            toDos && toDos.map((eachTodo) => {
+
+              if (eachTodo.statusDropped && !eachTodo.statusRetrieve) {
+                return (
+
+                  <div className="toDoList">
+
+                    <div className="retrieve">
                       <i onClick={(e) => {
 
                         e.target.value = true
                         setToDos(toDos.filter((elem) => {
                           if (elem.id === eachTodo.id) {
-                            elem.statusDropped = e.target.value
+                            elem.statusRetrieve = e.target.value
+                            elem.statusDropped = !e.target.value
+                            console.log(elem);
                           }
                           return elem
+
                         }))
-                      }} class="fa-solid fa-xmark" title='Drop'></i>
+                      }} class="fa-solid fa-rotate-right" title='Retrieve'></i>
                     </div>
-                  </div>
 
-                </div>
-              )
-            } else if (eachTodo.statusRetrieve && !eachTodo.statusDropped) {
-              <div key={eachTodo.id} className='toDoList'>
+                    <div className='text_time'>
+                      <div className="toDoListText">
+                        <p>{eachTodo.text}</p>
+                      </div>
 
-                <div className="addtocompletelist">
-                  <i onClick={() => {
+                      <div className="todoTime">
+                        <p>{eachTodo.todoTime}</p>
+                      </div>
+                    </div>
 
-                    let value = true
-                    setToDos(toDos.filter((elem) => {
+                    <div className="delete">
+                      <i onClick={() => {
 
-                      if (elem.id === eachTodo.id) {
-                        elem.statusDone = value
-                      }
-                      return elem
-                    }))
-                  }} class="fa-solid fa-clipboard-check" title='Done'></i>
-                </div>
+                        let isdelete = window.confirm('Do you want to remove it?')
+                        if (isdelete) {
 
-                <div className="toDoListText">
-                  <p>{eachTodo.text}</p>
-                </div>
+                          setToDos(toDos.filter((elem) => {
 
-                <div className="drop_delete">
-                  <div className="delete">
-                    <i onClick={() => {
-
-                      let isdelete = window.confirm('Do you want to remove it?')
-                      if (isdelete) {
-
-                        setToDos(toDos.filter((elem) => {
-
-                          if (elem.id === eachTodo.id) {
-                            elem = null
-                          }
-                          return elem
-                        }))
-                      }
-
-                    }} class="fa-solid fa-trash" title='Remove'></i>
-                  </div>
-                  <div className="drop">
-                    <i onClick={(e) => {
-
-                      e.target.value = true
-                      setToDos(toDos.filter((elem) => {
-                        if (elem.id === eachTodo.id) {
-                          elem.statusDropped = e.target.value
+                            if (elem.id === eachTodo.id) {
+                              elem = null
+                            }
+                            return elem
+                          }))
                         }
-                        return elem
-                      }))
-                    }} class="fa-solid fa-xmark" title='Drop'></i>
-                  </div>
-                </div>
 
-              </div>
-            }
-            return null
-          })
-        }
+                      }} class="fa-solid fa-trash" title='Remove'></i>
+
+                    </div>
+
+                  </div>
+                )
+              } return null
+            })
+
+          }
+
+        </div>
       </div>
-
-      <div className="container">
-        <h3>Dropped List</h3>
-
-        {
-          toDos && toDos.map((eachTodo) => {
-
-            if (eachTodo.statusDropped) {
-              return (
-
-                <div className="toDoList">
-
-                  <div className="retrieve">
-                    <i onClick={(e) => {
-
-                      e.target.value = true
-                      setToDos(toDos.filter((elem) => {
-                        if (elem.id === eachTodo.id) {
-                          elem.statusRetrieve = e.target.value
-                          elem.statusDropped = !e.target.value
-                        }
-                        return elem
-
-                      }))
-                    }} class="fa-solid fa-rotate-right" title='Retrieve'></i>
-                  </div>
-
-                  <div className="toDoListText">
-                    <p>{eachTodo.text}</p>
-                  </div>
-
-                  <div className="delete">
-                    <i onClick={() => {
-
-                      let isdelete = window.confirm('Do you want to remove it?')
-                      if (isdelete) {
-
-                        setToDos(toDos.filter((elem) => {
-
-                          if (elem.id === eachTodo.id) {
-                            elem = null
-                          }
-                          return elem
-                        }))
-                      }
-
-                    }} class="fa-solid fa-trash" title='Remove'></i>
-
-                  </div>
-
-                </div>
-              )
-            } return null
-          })
-
-        }
-
-      </div>
-
 
 
       {/* DoneList Container End */}
